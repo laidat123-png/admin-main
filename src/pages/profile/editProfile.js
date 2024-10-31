@@ -147,7 +147,7 @@ function EditProfile(props) {
             <div className="main-body">
                 <div className="card shadow mb-4">
                     <div className="card-header py-3">
-                        <h6 className="m-0 font-weight-bold text-primary">Edit Profile</h6>
+                        <h6 className="m-0 font-weight-bold text-primary">Chỉnh sửa hồ sơ</h6>
                     </div>
                 </div>
                 {isLoading ? <div className="row">
@@ -179,7 +179,7 @@ function EditProfile(props) {
                             <div className="card-body">
                                 <div className="row mb-3">
                                     <div className="col-sm-3">
-                                        <h6 className="mb-0">Frist Name</h6>
+                                        <h6 className="mb-0">Họ</h6>
                                     </div>
                                     <div className="col-sm-9 text-secondary">
                                         <input type="text" className="form-control" name="firstName" onChange={handleOnchangeForm} value={data.firstName} />
@@ -187,7 +187,7 @@ function EditProfile(props) {
                                 </div>
                                 <div className="row mb-3">
                                     <div className="col-sm-3">
-                                        <h6 className="mb-0">Last Name</h6>
+                                        <h6 className="mb-0">Tên</h6>
                                     </div>
                                     <div className="col-sm-9 text-secondary">
                                         <input type="text" className="form-control" name="lastName" onChange={handleOnchangeForm} value={data.lastName} />

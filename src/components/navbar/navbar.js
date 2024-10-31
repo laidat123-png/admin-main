@@ -124,7 +124,7 @@ function Navbar(props) {
                     <Link to="/orders" className="nav-link collapsed" style={{ display: 'flex', justifyContent: 'space-between', alignItems: "center", cursor: 'pointer' }}>
                         <span style={{ cursor: "pointer" }}>
                             <i className="fas fa-book-open"></i>
-                            Đơn Hàng
+                            Đơn hàng
                         </span>
                     </Link>
                 </li>
@@ -140,7 +140,7 @@ function Navbar(props) {
                         <div id="collapsePages" className={`collapse ${active4 ? "show" : ''}`} >
                             <div className="bg-white py-2 collapse-inner rounded">
                                 <h6 className="collapse-header">Chi tiết tài khoản</h6>
-                                <Link to="/profile" className="collapse-item" >Profile</Link>
+                                <Link to="/profile" className="collapse-item" >Hồ sơ</Link>
                                 <span
                                     onClick={signOut}
                                     className="collapse-item" >Đăng xuất</span>

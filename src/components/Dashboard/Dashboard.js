@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector,useDispatch } from "react-redux";
-
+import { useSelector } from "react-redux";
 import axios from "axios";
 import {
   Area,
@@ -20,19 +19,32 @@ import TransactionsTable from "./TransactionsTable.js";
 
 const Dashboard = () => {
   const [totalRevenue, setTotalRevenue] = useState(0);
+  const [todayRevenue, setTodayRevenue] = useState(0); // New state for today's revenue
   const [productCount, setProductCount] = useState(0); // New state for product count
+  const [userCount, setUserCount] = useState(0); // New state for user count
+  const [orderCount, setOrderCount] = useState(0); // New state for order count
 
   useEffect(() => {
     const fetchTotalRevenue = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/revenue/total');
-        const totalRevenue = response.data.orders.reduce((sum, order) => {
+        const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+        let totalRevenue = 0;
+        let todayRevenue = 0;
+
+        response.data.orders.forEach(order => {
           const amount = typeof order.totalAmount === 'string' 
             ? parseInt(order.totalAmount.replace('đ', '')) 
             : order.totalAmount;
-          return sum + (amount || 0);
-        }, 0);
+          totalRevenue += amount || 0;
+
+          if (order.createdAt.split('T')[0] === today) {
+            todayRevenue += amount || 0;
+          }
+        });
+
         setTotalRevenue(totalRevenue);
+        setTodayRevenue(todayRevenue);
       } catch (error) {
         console.error('Error fetching total revenue:', error);
       }
@@ -40,13 +52,16 @@ const Dashboard = () => {
 
     const fetchProductCount = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/products');
-        setProductCount(response.data.totalProducts);
+        const response = await axios.get('http://localhost:5000/api/revenue/count-drash-board');
+        const data = response.data;
+        console.log(data)
+        setProductCount(data.countProduct);
+        setOrderCount(data.countOrder);
+        setUserCount(data.countUser);
       } catch (error) {
         console.error('Error fetching product count:', error);
       }
     };
-
 
     fetchTotalRevenue();
     fetchProductCount();
@@ -61,38 +76,47 @@ const Dashboard = () => {
   ];
 
   const totalUsers = useSelector((state) => state.user);
-  console.log("totalUsers", totalUsers);
+
+  const formatCurrency = (amount) => {
+    // Xử lý cả trường hợp amount là string hoặc number
+    if (typeof amount === 'string') {
+      amount = parseInt(amount.replace('đ', ''));
+    }
+    return `${amount.toLocaleString('vi-VN')}đ`;
+  };
+
   const metrics = [
     {
       title: "NGƯỜI DÙNG",
-      value: totalUsers.length ? totalUsers.length : "0",
+      value: userCount,
       change: "20%",
-      linkText: "See all users",
+      linkText: "Xem tất cả",
       icon: "👤",
       link: "/users/list",
     },
     {
       title: "ĐƠN HÀNG",
-      value: "34",
+      value: orderCount,
       change: "20%",
-      linkText: "See all orders",
+      linkText: "Xem tất cả",
       icon: "📦",
       link: "/orders",
     },
     {
       title: "SẢN PHẨM",
-      value: productCount ? productCount.toString() : "0",
+      value: productCount,
       change: "20%",
-      linkText: "See all products",
+      linkText: "Xem tất cả",
       icon: "📦",
       link: "/product/list",
     },
     {
-      title: "SỐ DƯ",
-      value: `$ ${totalRevenue}`,
+      title: "DOANH THU",
+      value: formatCurrency(totalRevenue),
       change: "20%",
-      linkText: "See all balance",
-      icon: "💰"
+      linkText: "Xem tất cả",
+      icon: "💰",
+      link: "/Revenue",
     },
   ];
 
@@ -144,7 +168,7 @@ const Dashboard = () => {
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
-          <h3 className="total-sales">$ 324</h3>
+          <h3 className="total-sales">{formatCurrency(todayRevenue)}</h3>
           <p className="sales-description">Doanh thu hôm nay</p>
         </div>
 
