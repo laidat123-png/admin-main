@@ -205,9 +205,6 @@ function ListUserPage(props) {
                         </select>
                     </div>
                 </div>
-                <div className="total-users">
-                    <h6>Tổng số người dùng: {totalUsers}</h6>
-                </div>
             </div>
             <ModalUser
                 openModal={openModal}

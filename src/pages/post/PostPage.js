@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
 import Loading from '../../components/Loading';
+
 export const PostPage = () => {
     const [totalPage, setTotalPage] = useState(0);
     const [posts, setPosts] = useState([]);
@@ -13,31 +14,35 @@ export const PostPage = () => {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState({
         page: 1,
-        litmit: 5
-    })
+        limit: 5
+    });
+
     const onChangeSearch = (e) => {
         setKeyword(e.target.value);
-    }
+    };
+
     const fetchAllPost = () => {
         setLoading(false);
         axios({
             method: "GET",
-            url: `${URL_API}/post?limit=${page.litmit}&page=${page.page}`
+            url: `${URL_API}/post?limit=${page.limit}&page=${page.page}`
         })
             .then(res => res.data)
             .then(data => {
-                console.log(data)
+                console.log(data);
                 setLoading(true);
                 setPosts(data.Posts);
                 setTotalPage(data.totalPage);
-            })
-    }
+            });
+    };
+
     useEffect(() => {
         fetchAllPost();
         return () => {
             setPosts([]);
-        }
-    }, [page])
+        };
+    }, [page]);
+
     const handleSubmitSearchText = (e) => {
         setLoading(false);
         e.preventDefault();
@@ -52,7 +57,8 @@ export const PostPage = () => {
                 setLoading(true);
                 setPosts(data.posts);
             });
-    }
+    };
+
     const handleDeletePost = (id) => {
         axios({
             method: "DELETE",
@@ -69,29 +75,31 @@ export const PostPage = () => {
                         autoClose: 3000,
                         closeButton: true,
                         position: "top-right"
-                    })
-
+                    });
                 }
-            })
-    }
-    const onChangeLitmit = (e) => {
+            });
+    };
+
+    const onChangeLimit = (e) => {
         setPage({ ...page, limit: e.target.value });
-    }
+    };
+
     const handleChangePage = (indexPage) => {
-        setPage({ ...page, page: indexPage.selected + 1 })
-    }
+        setPage({ ...page, page: indexPage.selected + 1 });
+    };
+
     const confirmDelete = (postId) => {
-        postId = posts._id;
         if (window.confirm("Bạn có chắc chắn muốn xóa bài viết này không?")) {
-            handleDeletePost(posts._id);
+            handleDeletePost(postId);
         }
     };
+
     return (
         <div className="wrapper-product">
-            <div class="container-fluid" style={{ marginBottom: "10px" }}>
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Danh sách bài viết</h6>
+            <div className="container-fluid" style={{ marginBottom: "10px" }}>
+                <div className="card shadow mb-4">
+                    <div className="card-header py-3">
+                        <h6 className="m-0 font-weight-bold text-primary">Danh sách bài viết</h6>
                     </div>
                 </div>
                 <div className="justify-content-between" style={{ display: 'flex' }}>
@@ -104,7 +112,7 @@ export const PostPage = () => {
                     </form>
                     <div className="result-product">
                         <span>Result :</span>
-                        <select className="custom-se" onChange={onChangeLitmit}>
+                        <select className="custom-se" onChange={onChangeLimit}>
                             <option value="5">5</option>
                             <option value="10">10</option>
                             <option value="15">15</option>
@@ -113,9 +121,9 @@ export const PostPage = () => {
                     </div>
                 </div>
             </div>
-            <div class="card-body m-0 pt-0">
-                <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
+            <div className="card-body m-0 pt-0">
+                <div className="table-responsive">
+                    <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
                         <thead>
                             <tr>
                                 <th className="text-center">STT</th>
@@ -126,24 +134,28 @@ export const PostPage = () => {
                             </tr>
                         </thead>
 
-                        {loading ? <tbody>
-                            {posts?.map((post, index) => {
-                                return (
-                                    <tr key={post._id}>
-                                        <td className="text-center">{index + 1}</td>
-                                        <td className="text-center"><span className="dot">{post.title}</span></td>
-                                        <td className="text-center">{`${post.author.firstName} ${post.author.lastName}`}</td>
-                                        <td className="text-center">{new Date(post.createdAt).toLocaleDateString()}</td>
-                                        <td className="text-center">
-                                            <Link to={`/Blog/${post._id}`} className="btn btn-primary"><i class="fas fa-pen-square"></i></Link>
-                                            <button
-                                                onClick={() => confirmDelete(post._id)}
-                                                className="btn btn-warning"><i class="far fa-trash-alt"></i></button>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody> : <Loading />}
+                        {loading ? (
+                            <tbody>
+                                {posts?.map((post, index) => {
+                                    return (
+                                        <tr key={post._id}>
+                                            <td className="text-center">{index + 1}</td>
+                                            <td className="text-center"><span className="dot">{post.title}</span></td>
+                                            <td className="text-center">
+                                                {post.author ? `${post.author.firstName} ${post.author.lastName}` : 'N/A'}
+                                            </td>
+                                            <td className="text-center">{new Date(post.createdAt).toLocaleDateString()}</td>
+                                            <td className="text-center">
+                                                <Link to={`/Blog/${post._id}`} className="btn btn-primary"><i className="fas fa-pen-square"></i></Link>
+                                                <button
+                                                    onClick={() => confirmDelete(post._id)}
+                                                    className="btn btn-warning"><i className="far fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        ) : <Loading />}
                     </table>
                 </div>
             </div>
@@ -153,13 +165,13 @@ export const PostPage = () => {
                 pageCount={totalPage}
                 pageRangeDisplayed={1}
                 initialPage={0}
-                nextLabel={<i class="fas fa-chevron-circle-right"></i>}
-                previousLabel={<i class="fas fa-chevron-circle-left"></i>}
+                nextLabel={<i className="fas fa-chevron-circle-right"></i>}
+                previousLabel={<i className="fas fa-chevron-circle-left"></i>}
                 previousClassName='control-pagination'
                 nextClassName='control-pagination'
                 onPageChange={handleChangePage}
                 activeClassName='active-pagination'
             />
         </div>
-    )
-}
+    );
+};

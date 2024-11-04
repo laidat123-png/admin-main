@@ -1,0 +1,26 @@
+/* CSS cho phần tiêu đề và button trong OrdersPage */
+.card-header {
+    display: flex;
+    justify-content: space-between; /* Đẩy tiêu đề sang trái và button sang phải */
+    align-items: center; /* Căn giữa các phần tử theo chiều dọc */
+}
+
+.card-header .btn-secondary {
+    padding: 5px 15px; /* Điều chỉnh padding của button */
+    font-size: 14px; /* Kích thước chữ trong button */
+    color: #fff;
+    background-color: #6c757d; /* Màu nền cho button */
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.card-header .btn-secondary:hover {
+    background-color: #5a6268; /* Màu nền khi hover vào button */
+}
+
+.card-header h6 {
+    margin: 0;
+    font-size: 16px; /* Kích thước chữ cho tiêu đề */
+    font-weight: bold;
+    color: #4e73df; /* Màu sắc cho tiêu đề */
+}

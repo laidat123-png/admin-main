@@ -5,7 +5,8 @@ import OrdersDetail from '../../components/orders/ordersDetail';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
 import { toast } from 'react-toastify';
-
+import { Link } from 'react-router-dom';
+import './OrdersPage.css';
 function OrdersPage(props) {
     const [orders, setOrders] = useState([]);
     const [isLoadingPage, setIsLoadingPage] = useState(false);
@@ -35,6 +36,7 @@ function OrdersPage(props) {
     }
 
     const handleDeleteOrder = (id) => {
+        const orderToDelete = orders.find(order => order._id === id);
         axios({
             url: `${URL_API}/orders/${id}`,
             method: "DELETE",
@@ -45,7 +47,18 @@ function OrdersPage(props) {
             .then(res => res.data)
             .then(data => {
                 if (data.status === 'success') {
+                    // Add the deleted order to localStorage with deletion timestamp
+                    const deletedOrder = {
+                        ...orderToDelete,
+                        deletedAt: new Date().toISOString()
+                    };
+                    
+                    // Get existing deleted orders and add the new one
+                    const storedDeletedOrders = JSON.parse(localStorage.getItem('deletedOrders') || '[]');
+                    const updatedDeletedOrders = [...storedDeletedOrders, deletedOrder];
+                    localStorage.setItem('deletedOrders', JSON.stringify(updatedDeletedOrders));
                     fetchAllOrders();
+
                     toast.success("Xóa đơn hàng thành công!", {
                         autoClose: 3000,
                         position: "top-right",
@@ -149,6 +162,10 @@ function OrdersPage(props) {
                 <div className="card shadow mb-4">
                     <div className="card-header py-3">
                         <h6 className="m-0 font-weight-bold text-primary">Đơn hàng</h6>
+                <Link to="/deleted-orders" className="btn btn-secondary">
+                    <i className="fas fa-trash-alt mr-2"></i>
+                    Đơn hàng đã xóa
+                </Link>
                     </div>
                 </div>
                 <div className="justify-content-between" style={{ display: 'flex', marginBottom: "10px" }}>

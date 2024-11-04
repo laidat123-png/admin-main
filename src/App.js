@@ -24,6 +24,7 @@ import CategoryProductPage from './pages/product/CategoryProductPage';
 import ListUserPage from './pages/user/ListUserPage';
 import CreateUserPage from './pages/user/CreateUserPage';
 import OrdersPage from './pages/orders/OrdersPage';
+import DeletedOrdersPage from './pages/orders/DeletedOrdersPage';
 import CodePage from './pages/code/CodePage';
 import TypePage from './pages/product/TypePage';
 import Profile from './pages/profile/profile';
@@ -71,6 +72,7 @@ function App() {
                 <PrivateRoute path="/users/add" exact component={CreateUserPage} layout={Common} />
                 {/* Orders */}
                 <PrivateRoute path="/orders" exact component={OrdersPage} layout={Common} />
+                <PrivateRoute path="/deleted-orders" exact component={DeletedOrdersPage} layout={Common} />
                 {/* Revenue */}
                 <PrivateRoute path="/revenue" exact component={Revenue} layout={Common} />
                 {/* Code */}

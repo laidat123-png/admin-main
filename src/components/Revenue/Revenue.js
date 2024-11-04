@@ -196,7 +196,7 @@ const Revenue = () => {
               revenueData.orders.map((order) => (
                 <tr key={order.orderID}>
                   <td>{order.orderID}</td>
-                  <td>{formatCurrency(order.totalAmount)}</td>
+                  <td>{formatCurrency(order.totalAmount + 30000)}</td>
                   <td>{formatDate(order.createdAt)}</td>
                 </tr>
               ))
@@ -211,7 +211,7 @@ const Revenue = () => {
 
       <div className="summary">
         <p><strong>Tổng đơn hàng:</strong> {revenueData?.totalRecords || 0}</p>
-        <p><strong>Tổng tiền đơn hàng:</strong> {formatCurrency(revenueData?.totalRevenue || 0)}</p>
+        <p><strong>Tổng tiền đơn hàng:</strong> {formatCurrency((revenueData?.totalRevenue || 0) + 30000 * (revenueData?.totalRecords || 0))}</p>
       </div>
     </div>
   );

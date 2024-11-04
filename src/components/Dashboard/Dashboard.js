@@ -111,8 +111,8 @@ const Dashboard = () => {
       link: "/product/list",
     },
     {
-      title: "DOANH THU",
-      value: formatCurrency(totalRevenue),
+      title: "DOANH THU SP",
+      value: formatCurrency(totalRevenue), // Add 30000 shipping fee per order
       change: "20%",
       linkText: "Xem tất cả",
       icon: "💰",

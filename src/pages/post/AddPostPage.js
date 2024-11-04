@@ -1,4 +1,3 @@
-
 import { Editor } from "react-draft-wysiwyg";
 import { useRef, useState } from "react";
 import { useForm } from 'react-hook-form';
@@ -9,14 +8,16 @@ import Spinners from '../../components/Spinners';
 import { URL_API } from '../../constants/config';
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
+
 export const AddPostPage = () => {
     const history = useHistory();
     const fileRef = useRef();
     const [file, setFile] = useState(null);
     const [image, setImage] = useState(null);
     const [content, setContent] = useState(null);
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const [spn, setSpn] = useState(false);
+
     const onSubmitPost = (data) => {
         setSpn(true);
         if (file && content) {
@@ -46,10 +47,12 @@ export const AddPostPage = () => {
                 })
         }
     }
+
     const onChangeFileImage = (e) => {
         setFile(e.target.files[0])
         encodeImageFileAsURL(e.target.files[0]);
     }
+
     const encodeImageFileAsURL = (element) => {
         var file = element;
         var reader = new FileReader();
@@ -58,9 +61,11 @@ export const AddPostPage = () => {
         }
         reader.readAsDataURL(file);
     }
+
     const onChangeEditor = (editorState) => {
         setContent(draftToHtml(convertToRaw(editorState.getCurrentContent())));
     }
+
     return (
         <div className="wrapper-product">
             <div className="container-fluid" style={{ marginBottom: "10px" }}>
@@ -74,9 +79,20 @@ export const AddPostPage = () => {
                 <form className="post-form" onSubmit={handleSubmit(onSubmitPost)}>
                     <div className="post-form_group">
                         <input
-                            {...register("title", { required: true })}
+                            {...register("title", {
+                                required: "Tiêu đề không được để trống",
+                                maxLength: {
+                                    value: 30,
+                                    message: "Tiêu đề không được quá 30 kí tự"
+                                },
+                                pattern: {
+                                    value: /^[a-zA-Z0-9\s]*$/,
+                                    message: "Tiêu đề không được chứa kí tự đặc biệt"
+                                }
+                            })}
                             type="text"
                             placeholder="Tiêu đề....." />
+                        {errors.title && <span style={{ color: 'red' }}>{errors.title.message}</span>}
                     </div>
                     <div className="post-form_group" onClick={() => fileRef.current.click()}>
                         <input
@@ -84,7 +100,7 @@ export const AddPostPage = () => {
                             type="file"
                             hidden ref={fileRef} />
                         {!image ? <div className="post-form_file">
-                            <span><i class="fas fa-images"></i></span>
+                            <span><i className="fas fa-images"></i></span>
                         </div> : <div className="post-form_file"><img alt="Ảnh đại diện bài viết" src={image} className="post-form_image" /></div>}
                     </div>
                     <Editor
