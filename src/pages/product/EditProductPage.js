@@ -10,6 +10,7 @@ import { URL_API } from '../../constants/config';
 import Loading from '../../components/Loading';
 import axios from 'axios';
 import Spinners from '../../components/Spinners';
+
 function EditProduct(props) {
     let history = useHistory();
     const [images, setImages] = React.useState([]);
@@ -24,6 +25,7 @@ function EditProduct(props) {
     const [des, setDes] = useState("");
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
     const maxNumber = 4;
+
     const onChange = (imageList) => {
         const files = [];
         const url = [];
@@ -36,6 +38,7 @@ function EditProduct(props) {
         setFiles(files);
         setImages(imageList);
     };
+
     const onErrros = (errros, files) => {
         if (errros.maxNumber) {
             toast.error("Tối đa chỉ 4 ảnh!", {
@@ -46,6 +49,7 @@ function EditProduct(props) {
             })
         }
     }
+
     function getOneProduct() {
         setLoading(false);
         axios({
@@ -78,6 +82,7 @@ function EditProduct(props) {
                 console.log(err)
             })
     }
+
     function GetAllTypeAndNxb() {
         axios.get(`${URL_API}/tn/type`)
             .then(res => res.data)
@@ -90,10 +95,12 @@ function EditProduct(props) {
                 setNxb(data.nxb);
             })
     }
+
     useEffect(() => {
         GetAllTypeAndNxb();
         getOneProduct();
     }, [productID])
+
     const onSubmit = (data) => {
         const formData = new FormData();
         if (files.length != 0) {
@@ -144,9 +151,11 @@ function EditProduct(props) {
                 }
             });
     }
+
     const onChangeDes = (editorState) => {
         setDes(draftToHtml(convertToRaw(editorState.getCurrentContent())));
     }
+
     return (
         <div className="container" >
             {loading ? <div className="wrapper-edit">
@@ -290,7 +299,7 @@ function EditProduct(props) {
                                                 className="form-control"
                                                 {...register('form.pages', { required: true })}
                                             />
-                                            {errors.pages && <span style={{ color: 'red' }}>Vui lòng nhập giá sản phẩm</span>}
+                                            {errors.pages && <span style={{ color: 'red' }}>Vui lòng nhập trang</span>}
                                         </div>
                                     </div>
                                     <div className="form-group mb-3">
@@ -299,10 +308,22 @@ function EditProduct(props) {
                                         </label>
                                         <input
                                             id="sale"
-                                            type="text"
+                                            type="number"
                                             className="form-control"
-                                            {...register("form.sale")}
+                                            {...register("form.sale", { 
+                                                min: 1, 
+                                                max: 100,
+                                                pattern: {
+                                                    value: /^[1-9][0-9]?$|^100$/,
+                                                    message: 'Vui lòng nhập số trong khoảng từ 1 tới 100'
+                                                }
+                                            })}
                                         />
+                                        {errors.sale && (
+                                            <span style={{ color: 'red' }}>
+                                                {errors.sale.message || 'Vui lòng nhập số trong khoảng từ 1 tới 100'}
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="row">
                                         <ImageUploading

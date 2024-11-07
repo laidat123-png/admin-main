@@ -250,10 +250,22 @@ function AddProduct(props) {
                     <label>Giảm giá (không bắt buộc) (%)</label>
                     <input
                       id='sale'
-                      type='text'
+                      type='number'
                       className='form-control'
-                      {...register('sale')}
+                      {...register('sale', { 
+                        min: 1, 
+                        max: 100,
+                        pattern: {
+                          value: /^[1-9][0-9]?$|^100$/,
+                          message: 'Vui lòng nhập số trong khoảng từ 1 tới 100'
+                        }
+                      })}
                     />
+                    {errors.sale && (
+                      <span style={{ color: 'red' }}>
+                        {errors.sale.message || 'Vui lòng nhập số trong khoảng từ 1 tới 100'}
+                      </span>
+                    )}
                   </div>
                   <div className='row'>
                     <h5 className='text-center d-block pl-1 px-3'>Hình ảnh</h5>
