@@ -129,9 +129,23 @@ function Modal(props) {
                                     type="text"
                                     className="form-control"
                                     defaultValue={code.code}
-                                    {...register('code', { required: false, minLength: 6 })}
+                                    {...register('code', {
+                                        required: "Code không được để trống",
+                                        minLength: {
+                                            value: 6,
+                                            message: "Tối thiểu 6 kí tự"
+                                        },
+                                        maxLength: {
+                                            value: 12,
+                                            message: "Tối đa 12 kí tự"
+                                        },
+                                        pattern: {
+                                            value: /^[a-zA-Z0-9]*$/,
+                                            message: "Code không được chứa kí tự đặc biệt"
+                                        }
+                                    })}
                                 />
-                                {errors.code && <span style={{ color: 'red' }}>Tối thiểu 6 kí tự</span>}
+                                {errors.code && <span style={{ color: 'red' }}>{errors.code.message}</span>}
                             </div>
                             <div className="form-group">
                                 <label className="col-form-label">Discount</label>

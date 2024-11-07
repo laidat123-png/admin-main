@@ -35,7 +35,7 @@ function Login(props) {
                                             type="text"
                                             className="form-control form-control-user"
                                             placeholder="Nhập tài khoản..."
-                                            {...register('email', { pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/, required: true })} />
+                                            {...register('email', { pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-àáâãèéêìíòóôõùúăđĩũơưạ-ỹ]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/, required: true })} />
                                         {errors.email && <span style={{ color: 'red' }}>Trường này phải là email</span>}
                                     </div>
                                     <div className="form-group">

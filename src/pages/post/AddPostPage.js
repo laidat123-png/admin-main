@@ -82,11 +82,11 @@ export const AddPostPage = () => {
                             {...register("title", {
                                 required: "Tiêu đề không được để trống",
                                 maxLength: {
-                                    value: 30,
-                                    message: "Tiêu đề không được quá 30 kí tự"
+                                    value: 50,
+                                    message: "Tiêu đề không được quá 50 kí tự"
                                 },
                                 pattern: {
-                                    value: /^[a-zA-Z0-9\s]*$/,
+                                    value: /^[A-Za-zÀ-ỹ0-9\s]*$/,
                                     message: "Tiêu đề không được chứa kí tự đặc biệt"
                                 }
                             })}

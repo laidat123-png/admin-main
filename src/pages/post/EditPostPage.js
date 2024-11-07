@@ -9,15 +9,17 @@ import { useForm } from 'react-hook-form';
 import { EditorState, ContentState, convertFromHTML, convertToRaw } from 'draft-js';
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
+
 export const EditPostPage = () => {
     const history = useHistory();
     const [product, setProduct] = useState({});
-    const { register, handleSubmit, setValue } = useForm();
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
     const [image, setImage] = useState("");
     const fileRef = useRef();
     const params = useParams();
     const [file, setFile] = useState(null);
     const [spn, setSpn] = useState(false);
+
     const fetchOneProduct = () => {
         axios.get(`${URL_API}/post/${params.id}`)
             .then(res => res.data)
@@ -28,16 +30,19 @@ export const EditPostPage = () => {
                 setValue("tags", data.post.tags);
             })
     }
+
     useEffect(() => {
         fetchOneProduct();
         return () => {
             setProduct({});
         }
     }, [params.id])
+
     const onChangeFileImage = (e) => {
         setFile(e.target.files[0])
         encodeImageFileAsURL(e.target.files[0]);
     }
+
     const encodeImageFileAsURL = (element) => {
         var file = element;
         var reader = new FileReader();
@@ -46,6 +51,7 @@ export const EditPostPage = () => {
         }
         reader.readAsDataURL(file);
     }
+
     const onSubmitPost = (dataa) => {
         setSpn(true);
         const formData = new FormData();
@@ -86,9 +92,11 @@ export const EditPostPage = () => {
                 }
             })
     }
+
     const onChangeEditor = (editorState) => {
         setProduct({ ...product, content: draftToHtml(convertToRaw(editorState.getCurrentContent())) })
     }
+
     return (
         <div className="wrapper-product">
             <div className="container-fluid" style={{ marginBottom: "10px" }}>
@@ -103,9 +111,20 @@ export const EditPostPage = () => {
                     <div className="post-form_group">
                         <input
                             defaultValue={product.title}
-                            {...register("title", { required: true })}
+                            {...register("title", {
+                                required: "Tiêu đề không được để trống",
+                                maxLength: {
+                                    value: 50,
+                                    message: "Tiêu đề không được quá 50 kí tự"
+                                },
+                                pattern: {
+                                    value: /^[A-Za-zÀ-ỹ0-9\s]*$/,
+                                    message: "Tiêu đề không được chứa kí tự đặc biệt"
+                                }
+                            })}
                             type="text"
                             placeholder="Tiêu đề....." />
+                        {errors.title && <span style={{ color: 'red' }}>{errors.title.message}</span>}
                     </div>
                     <div className="post-form_group" onClick={() => fileRef.current.click()}>
                         <input
@@ -113,7 +132,7 @@ export const EditPostPage = () => {
                             type="file"
                             hidden ref={fileRef} />
                         {!image ? <div className="post-form_file">
-                            <span><i class="fas fa-images"></i></span>
+                            <span><i className="fas fa-images"></i></span>
                         </div> : <div className="post-form_file"><img alt="Ảnh đại diện bài viết" src={image} className="post-form_image" /></div>}
                     </div>
                     {product.content && (

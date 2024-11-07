@@ -49,7 +49,16 @@ function ModalUser(props) {
                                 <input
                                     type="text"
                                     className="form-control"
-                                    {...register('firstName', { required: 'Vui lòng nhập trường này' })}
+                                    {...register('firstName', { required: 'Vui lòng nhập trường này',
+                                        pattern: {
+                                            value: /^[A-Za-zÀ-ỹ][A-Za-zÀ-ỹ\s]*$/,
+                                            message: "Phải bắt đầu bằng chữ và không có kí tự đặc biệt"
+                                        },
+                                        maxLength: {
+                                            value: 20,
+                                            message: "Độ dài bé hơn 20 kí tự"
+                                        }
+                                     })}
                                 />
                                 {errors.firstName && <span style={{ color: 'red' }}>{errors.firstName.message}</span>}
                             </div>
@@ -58,7 +67,16 @@ function ModalUser(props) {
                                 <input
                                     type="text"
                                     className="form-control"
-                                    {...register('lastName', { required: 'Vui lòng nhập trường này' })}
+                                    {...register('lastName', { required: 'Vui lòng nhập trường này',
+                                        pattern: {
+                                            value: /^[A-Za-zÀ-ỹ][A-Za-zÀ-ỹ\s]*$/,
+                                            message: "Phải bắt đầu bằng chữ và không có kí tự đặc biệt"
+                                        },
+                                        maxLength: {
+                                            value: 20,
+                                            message: "Độ dài bé hơn 20 kí tự"
+                                        }
+                                     })}
                                 />
                                 {errors.lastName && <span style={{ color: 'red' }}>{errors.lastName.message}</span>}
                             </div>
@@ -100,7 +118,7 @@ function ModalUser(props) {
                                             message: 'Mật khẩu không được vượt quá 12 ký tự'
                                         },
                                         pattern: {
-                                            value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
+                                            value: /^(?=.*[A-Za-zÀ-ỹ])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-zÀ-ỹ\d@$!%*#?&]{8,12}$/,
                                             message: 'Mật khẩu phải chứa chữ cái, số và ký tự đặc biệt'
                                         }
                                     })}

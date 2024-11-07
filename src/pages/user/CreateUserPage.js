@@ -53,7 +53,7 @@ function CreateUserPage(props) {
                             {...register("firstName", {
                                 required: "Vui lòng nhập trường này",
                                 pattern: {
-                                    value: /^[A-Za-z][A-Za-z\s]*$/,
+                                    value: /^[A-Za-zÀ-ỹ][A-Za-zÀ-ỹ\s]*$/,
                                     message: "Phải bắt đầu bằng chữ và không có kí tự đặc biệt"
                                 },
                                 maxLength: {
@@ -74,7 +74,7 @@ function CreateUserPage(props) {
                             {...register("lastName", {
                                 required: "Vui lòng nhập trường này",
                                 pattern: {
-                                    value: /^[A-Za-z][A-Za-z\s]*$/,
+                                    value: /^[A-Za-zÀ-ỹ][A-Za-zÀ-ỹ\s]*$/,
                                     message: "Phải bắt đầu bằng chữ và không có kí tự đặc biệt"
                                 },
                                 maxLength: {
@@ -95,7 +95,7 @@ function CreateUserPage(props) {
                             {...register("email", { 
                                 required: "Vui lòng nhập trường này",
                                 pattern: {
-                                    value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                                    value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-àáâãèéêìíòóôõùúăđĩũơưạ-ỹ]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
                                     message: "Email không đúng định dạng"
                                 },
                                 maxLength: {
@@ -124,7 +124,7 @@ function CreateUserPage(props) {
                                     message: "Mật khẩu không được vượt quá 12 ký tự"
                                 },
                                 pattern: {
-                                    value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,12}$/,
+                                    value: /^(?=.*[A-Za-zÀ-ỹ])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-zÀ-ỹ\d@$!%*#?&]{8,12}$/,
                                     message: "Mật khẩu phải chứa chữ cái, số và ký tự đặc biệt"
                                 }
                             })}
