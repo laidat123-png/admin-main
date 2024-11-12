@@ -94,7 +94,11 @@ function AddProduct(props) {
                     <label>Tên Sách</label>
                     <input
                       id='name'
-                      {...register('title', { required: true })}
+                      {...register('title', { required: true,
+                        maxLength: {
+                        value: 50,
+                        message: "Tên sách không được quá 50 kí tự"
+                      }})}
                       //Dấu "..." trong đoạn mã của bạn được sử dụng để trải rộng các thuộc tính của đối tượng 
                       //trả về từ hàm register vào một đối tượng mới. 
                       //Điều này giúp bạn dễ dàng thêm các thuộc tính vào một đối tượng mà không cần 
@@ -114,11 +118,21 @@ function AddProduct(props) {
                       id='name'
                       type='text'
                       className='form-control'
-                      {...register('author', { required: true })}
+                      {...register('author', { 
+                        required: "Vui lòng nhập tên tác giả",
+                        maxLength: {
+                          value: 50,
+                          message: "Tên tác giả không được quá 50 kí tự"
+                        },
+                        pattern: {
+                          value: /^[A-Za-zÀ-ỹ\s]*$/,
+                          message: "Tên tác giả không được chứa kí tự đặc biệt và số"
+                        }
+                      })}
                     />
                     {errors.author && (
                       <span style={{ color: 'red' }}>
-                        Vui lòng nhập tên tác giả
+                        {errors.author.message}
                       </span>
                     )}
                   </div>
@@ -196,12 +210,9 @@ function AddProduct(props) {
                         className='form-control'
                         {...register('publicYear', { 
                           required: true, 
-                          min: 0,
+                          min: 1,
                           max: currentYear,
-                          pattern: {
-                            value: /^\d{4}$/,
-                            message: 'Vui lòng nhập năm hợp lệ'
-                          }
+                          
                         })}
                       />
                       {errors.publicYear && (

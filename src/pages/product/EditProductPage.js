@@ -100,6 +100,7 @@ function EditProduct(props) {
         GetAllTypeAndNxb();
         getOneProduct();
     }, [productID])
+    const currentYear = new Date().getFullYear()
 
     const onSubmit = (data) => {
         const formData = new FormData();
@@ -179,7 +180,12 @@ function EditProduct(props) {
                                         </label>
                                         <input
                                             id="name"
-                                            {...register("form.title", { required: true })}
+                                            {...register("form.title", { required: true,
+                                                maxLength: {
+                                                    value: 50,
+                                                    message: "Tên sách không được quá 50 kí tự"
+                                                  }
+                                             })}
                                             type="text"
                                             className="form-control"
                                         />
@@ -193,7 +199,15 @@ function EditProduct(props) {
                                             id="name"
                                             type="text"
                                             className="form-control"
-                                            {...register("form.author", { required: true })}
+                                            {...register("form.author", { required: "Vui lòng nhập tên tác giả",
+                                                maxLength: {
+                                                  value: 50,
+                                                  message: "Tên tác giả không được quá 50 kí tự"
+                                                },
+                                                pattern: {
+                                                  value: /^[A-Za-zÀ-ỹ\s]*$/,
+                                                  message: "Tên tác giả không được chứa kí tự đặc biệt và số"
+                                                } })}
                                         />
                                         {errors.author && <span style={{ color: 'red' }}>Vui lòng nhập tên tác giả</span>}
                                     </div>
@@ -259,9 +273,9 @@ function EditProduct(props) {
                                             >Giá
                                             </label>
                                             <input
-                                                type="text"
+                                                type="number"
                                                 className="form-control"
-                                                {...register('form.price', { required: true })}
+                                                {...register('form.price', {min:0, required: true })}
                                             />
                                             {errors.publicYear && <span style={{ color: 'red' }}>Vui lòng nhập giá sản phẩm</span>}
                                         </div>
@@ -273,7 +287,9 @@ function EditProduct(props) {
                                                 id="expire_date"
                                                 type="number"
                                                 className="form-control"
-                                                {...register('form.publicYear', { maxLength: 4, required: true })}
+                                                {...register('form.publicYear', {required: true,min: 1,
+                                                    max: currentYear,
+                                                     })}
                                             />
                                             {errors.price && <span style={{ color: 'red' }}>Vui lòng nhập năm xuất bản</span>}
                                         </div>
@@ -285,7 +301,12 @@ function EditProduct(props) {
                                                 id="stock"
                                                 type="number"
                                                 className="form-control"
-                                                {...register('form.inStock', { required: true })}
+                                                {...register('form.inStock', { required: true,min: 1, 
+                                                    pattern: {
+                                                      value: /^[1-9]\d*$/,
+                                                      message: 'Vui lòng nhập số nguyên dương'
+                                                    }
+                                                 })}
                                             />
                                             {errors.inStock && <span style={{ color: 'red' }}>Vui lòng nhập số lượng</span>}
                                         </div>
@@ -297,7 +318,11 @@ function EditProduct(props) {
                                                 id="expire_date"
                                                 type="number"
                                                 className="form-control"
-                                                {...register('form.pages', { required: true })}
+                                                {...register('form.pages', { required: true,min: 1, 
+                                                    pattern: {
+                                                      value: /^[1-9]\d*$/,
+                                                      message: 'Vui lòng nhập số nguyên dương'
+                                                    } })}
                                             />
                                             {errors.pages && <span style={{ color: 'red' }}>Vui lòng nhập trang</span>}
                                         </div>

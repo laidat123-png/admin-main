@@ -12,7 +12,6 @@ function ListUserPage(props) {
     const dispatch = useDispatch();
     const [totalPage, setTotalPage] = useState(null);
     const users = useSelector((state) => state.user) || [];
-    const totalUsers = useSelector((state) => state.user.totalUsers) || 0;
     const [keyword, setKeyWord] = useState("");
     const [isLoadingPage, setIsLoadingPage] = useState(false);
     const [page, setPage] = useState({
@@ -69,7 +68,6 @@ function ListUserPage(props) {
                 setIsLoadingPage(false);
                 setTotalPage(data.totalPage);
                 dispatch(GetAllUser(data.users));
-                dispatch(setTotalUsers(data.users.length));
             })
             .catch(err => {
                 setIsLoadingPage(false);
@@ -179,6 +177,35 @@ function ListUserPage(props) {
             })
     }
 
+    const onChangeStatus = (e, id) => {
+        axios({
+            method: "POST",
+            url: `${URL_API}/user/update-status`,
+            data: {
+                status: e.target.value,
+                userID: id
+            },
+            headers: { "Authorization": `Bearer ${sessionStorage.getItem('token')}` }
+        })
+        .then(res => {
+            if (res.data.status === "success") {
+                toast.success('Cập nhật trạng thái thành công!', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    closeOnClick: true,
+                    pauseOnHover: true
+                });
+            }
+        })
+        .catch(err => {
+            toast.warning('Cập nhật trạng thái thất bại!', {
+                position: "top-right",
+                autoClose: 3000,
+                closeOnClick: true,
+                pauseOnHover: true
+            });
+        });
+    };
     return (
         <div className="wrapper-product">
             <div class="container-fluid">
@@ -223,6 +250,7 @@ function ListUserPage(props) {
                                 <th className="text-center">STT</th>
                                 <th className="text-center">Email</th>
                                 <th className="text-center">Họ Tên</th>
+                                <th className="text-center">Trạng thái</th>
                                 <th className="text-center">Quyền</th>
                                 <th className="text-center">Số Điện Thoại</th>
                                 <th className="text-center">Ngày tạo</th>
@@ -237,11 +265,17 @@ function ListUserPage(props) {
                                         <td className="text-center">{user.email}</td>
                                         <td className="text-center">{`${user.firstName} ${user.lastName}`}</td>
                                         <td className="text-center">
+                                        <select
+                                            onChange={(e) => onChangeStatus(e, user._id)} // Thêm sự kiện onChange
+                                            className="select-cus">
+                                            <option value="hoạt động" selected={user.status === "hoạt động"}>Hoạt động</option>
+                                            <option value="không hoạt động" selected={user.status === "không hoạt động"}>Không hoạt động</option>
+                                        </select>
+                                        </td>
+                                        <td className="text-center">
                                             <select
                                                 onChange={(e) => onChangeRole(e, user._id)}
-                                                className="select-cus"
-                                                
-                                            >
+                                                className="select-cus">
                                                 {role.map((r, index) => {
                                                     return <option key={index} selected={user.role === r}>{r}</option>;
                                                 })}

@@ -5,8 +5,7 @@ import OrdersDetail from '../../components/orders/ordersDetail';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
-import './OrdersPage.css';
+
 function OrdersPage(props) {
     const [orders, setOrders] = useState([]);
     const [isLoadingPage, setIsLoadingPage] = useState(false);
@@ -130,25 +129,22 @@ function OrdersPage(props) {
 
     // Xuất dữ liệu chi tiết đơn hàng ra Excel
     const exportOrderDetailToExcel = (order) => {
-        const orderDetailData = [
-            {
-                'Mã đơn hàng': order._id,
-                'Người đặt': order.name,
-                'Email người đặt': order.email,
-                'Địa chỉ': order.address,
-                'Số điện thoại': order.phone,
-                'Ngày đặt': new Date(order.createdAt).toLocaleDateString(),
-                'Trạng thái': handleStatus(order.status),
-                'Mã giảm giá': order?.saleCode?.code || "Không",
-                'Giảm giá': `-${order?.saleCode?.discount || "0"} ${order?.saleCode?.type || ""}`,
-                'Tổng cộng': order.total,
-                'Sản phẩm': order.productDetail.map(product => `${product.productID?.title}`).join('\n'),
-                'Số lượng': order.productDetail.map(product => `${product.quantity}`).join('\n'),
-                'Giá tiền': order.productDetail.map(product => `${product.productID?.price}`).join('\n')
-
-            }
-        ];
-
+        const orderDetailData = order.productDetail.map((product, index) => ({
+            'Mã đơn hàng': index === 0 ? order._id : '',
+            'Người đặt': index === 0 ? order.name : '',
+            'Email người đặt': index === 0 ? order.email : '',
+            'Địa chỉ': index === 0 ? order.address : '',
+            'Số điện thoại': index === 0 ? order.phone : '',
+            'Ngày đặt': index === 0 ? new Date(order.createdAt).toLocaleDateString() : '',
+            'Trạng thái': index === 0 ? handleStatus(order.status) : '',
+            'Mã giảm giá': index === 0 ? order?.saleCode?.code || "Không" : '',
+            'Giảm giá': index === 0 ? `-${order?.saleCode?.discount || "0"} ${order?.saleCode?.type || ""}` : '',
+            'Tổng cộng': index === 0 ? order.total : '',
+            'Sản phẩm': product.productID?.title,
+            'Số lượng': product.quantity,
+            'Giá tiền': product.productID?.price
+        }));
+    
         // Chuyển dữ liệu thành Excel và tải file xuống
         const ws = XLSX.utils.json_to_sheet(orderDetailData);
         const wb = XLSX.utils.book_new();
@@ -162,10 +158,10 @@ function OrdersPage(props) {
                 <div className="card shadow mb-4">
                     <div className="card-header py-3">
                         <h6 className="m-0 font-weight-bold text-primary">Đơn hàng</h6>
-                <Link to="/deleted-orders" className="btn btn-secondary">
+                {/* <Link to="/deleted-orders" className="btn btn-secondary">
                     <i className="fas fa-trash-alt mr-2"></i>
                     Đơn hàng đã xóa
-                </Link>
+                </Link> */}
                     </div>
                 </div>
                 <div className="justify-content-between" style={{ display: 'flex', marginBottom: "10px" }}>

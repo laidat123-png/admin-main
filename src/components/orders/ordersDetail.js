@@ -91,6 +91,7 @@ function OrdersDetail(props) {
                     <div className="row invoice ">
                         <div className="col">
                             <p className="mb-1"> Email người đặt : {ordersDetail.email}</p>
+                            <p className="mb-1"> Tên người đặt : {ordersDetail.name}</p>
                             <p className="mb-1"> Địa chỉ giao : {ordersDetail.address}</p>
                             <p className="mb-1"> Ngày đặt : {new Date(ordersDetail.createdAt).toLocaleDateString()}</p>
                             <p className="mb-1">  Số điện thoại: {ordersDetail.phone}</p>

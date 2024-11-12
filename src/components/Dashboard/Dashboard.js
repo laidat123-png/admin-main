@@ -27,19 +27,21 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTotalRevenue = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/revenue/total');
+        const response = await axios.get('http://localhost:5000/api/orders?status=-1');
         const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
         let totalRevenue = 0;
         let todayRevenue = 0;
 
         response.data.orders.forEach(order => {
-          const amount = typeof order.totalAmount === 'string' 
-            ? parseInt(order.totalAmount.replace('đ', '')) 
-            : order.totalAmount;
-          totalRevenue += amount || 0;
+          if (order.status === 3) { // Chỉ tính các đơn hàng có trạng thái "Đã giao hàng"
+            const amount = typeof order.total === 'string' 
+              ? parseInt(order.total.replace('đ', '')) 
+              : order.total;
+            totalRevenue += amount || 0;
 
-          if (order.createdAt.split('T')[0] === today) {
-            todayRevenue += amount || 0;
+            if (order.createdAt.split('T')[0] === today) {
+              todayRevenue += amount || 0;
+            }
           }
         });
 
@@ -111,8 +113,8 @@ const Dashboard = () => {
       link: "/product/list",
     },
     {
-      title: "DOANH THU SP",
-      value: formatCurrency(totalRevenue), // Add 30000 shipping fee per order
+      title: "DOANH THU",
+      value: formatCurrency(totalRevenue),
       change: "20%",
       linkText: "Xem tất cả",
       icon: "💰",
