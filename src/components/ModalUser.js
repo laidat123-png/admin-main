@@ -52,7 +52,7 @@ function ModalUser(props) {
                                     {...register('firstName', { required: 'Vui lòng nhập trường này',
                                         pattern: {
                                             value: /^[A-Za-zÀ-ỹ][A-Za-zÀ-ỹ\s]*$/,
-                                            message: "Phải bắt đầu bằng chữ và không có kí tự đặc biệt"
+                                            message: "Phải bắt đầu bằng chữ và không có kí tự đặc biệt và số"
                                         },
                                         maxLength: {
                                             value: 20,

@@ -44,12 +44,12 @@ function Navbar(props) {
                     <div className="sidebar-brand-text mx-3">Book Shop <sup><i class="fas fa-book"></i></sup></div>
                 </Link>
 
-                <li className="nav-item">
+                {/* <li className="nav-item">
                         <Link to="/Dashboard" className="nav-link collapsed" style={{ cursor: 'pointer', display: 'flex' }}>
                         <i className="fas fa-dollar-sign"></i>
                         <span>Dashboard</span>
                         </Link>
-                </li>
+                </li> */}
                 <li className="nav-item" onClick={() => handleActive(1)}>
                     <span className="nav-link collapsed" style={{ display: 'flex', justifyContent: 'space-between', alignItems: "center", cursor: 'pointer' }}>
                         <span>

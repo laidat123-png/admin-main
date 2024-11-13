@@ -55,6 +55,14 @@ function CodePage(props) {
                 fetchAllCode();
                 setLoadingBtn(false);
             })
+            .catch(err=>{
+                toast.error(err.response?.data?.message ??'Cập nhật mã giảm giá thất bại!' , {
+                    position: "top-right",
+                    autoClose: 3000,
+                    closeOnClick: true,
+                    pauseOnHover: true
+                })
+            })
     }
 
     const handleDeleteCode = (id) => {
@@ -74,6 +82,14 @@ function CodePage(props) {
                     pauseOnHover: true
                 })
                 fetchAllCode();
+            })
+            .catch(err=>{
+                toast.error("Voucher đã được sử dụng. Không xóa được !", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    closeOnClick: true,
+                    pauseOnHover: true
+                })
             })
     }
 
@@ -105,6 +121,14 @@ function CodePage(props) {
                         pauseOnHover: true
                     })
                 }
+            })
+            .catch(err=>{
+                toast.error(err.response?.data?.messenger ??'Thêm mã giảm giá thất bại!' , {
+                    position: "top-right",
+                    autoClose: 3000,
+                    closeOnClick: true,
+                    pauseOnHover: true
+                })
             })
     }
 

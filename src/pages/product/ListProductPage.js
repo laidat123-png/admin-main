@@ -121,7 +121,7 @@ function ProductPage(props) {
                 })
             })
             .catch(err => {
-                toast.warning('Xóa sản phẩm thất bại!', {
+                toast.warning('Xóa sản phẩm thất bại!\n'+err.response?.data?.message ?? "", {
                     position: "top-right",
                     autoClose: 3000,
                     closeOnClick: true,

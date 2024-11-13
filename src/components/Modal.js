@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import Spinners from './Spinners';
+import { max } from 'lodash';
 
 function Modal(props) {
     const {
@@ -174,14 +175,14 @@ function Modal(props) {
                                     onChange={onChangeType}
                                 >
                                     <option selected={code.type === "%"} value="%">%</option>
-                                    <option selected={code.type === "đ"} value="đ">đ</option>
+                                    {/* <option selected={code.type === "đ"} value="đ">đ</option> */}
                                 </select>
                             </div>
                             <div className="form-group">
                                 <label className="col-form-label">Số lượng</label>
                                 <input
                                     type="number"
-                                    {...register('quantity', { required: true, min: 1 })}
+                                    {...register('quantity', { required: true, min: 1,max: 100 })}
                                     defaultValue={code.quantity}
                                     className="form-control"
                                 />

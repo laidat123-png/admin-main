@@ -27,7 +27,7 @@ function AuthPage(props) {
                     sessionStorage.setItem('token', data.token);
                     sessionStorage.setItem('userID', data.user.id);
                     dispatch(setUser(data.user));
-                    history.push('/Dashboard');
+                    history.push('/dashboard');
                 }
                 if (data.status === 'failed') {
                     toast.error(data.messenger, {
