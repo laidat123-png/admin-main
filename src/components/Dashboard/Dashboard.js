@@ -193,7 +193,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <TransactionsTable />
+      {/* <TransactionsTable /> */}
     </div>
   );
 };
