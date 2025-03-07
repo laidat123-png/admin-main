@@ -19,6 +19,7 @@ function OrdersPage(props) {
         saleCode: { discount: 0, code: null, type: "%" },
         total: 0
     });
+    const [searchKeyword, setSearchKeyword] = useState(''); // State for search keyword
 
     function fetchAllOrders() {
         setIsLoadingPage(true);
@@ -36,6 +37,15 @@ function OrdersPage(props) {
 
     const handleDeleteOrder = (id) => {
         const orderToDelete = orders.find(order => order._id === id);
+        if (orderToDelete.status === 2) { // Kiểm tra nếu trạng thái là "Đang giao hàng"
+            toast.error("Không thể xóa đơn hàng khi đang ở trạng thái 'Đang giao hàng'", {
+                autoClose: 3000,
+                position: "top-right",
+                closeButton: true
+            });
+            return;
+        }
+
         axios({
             url: `${URL_API}/orders/${id}`,
             method: "DELETE",
@@ -152,6 +162,22 @@ function OrdersPage(props) {
         XLSX.writeFile(wb, `Xuất hóa đơn.xlsx`);
     };
 
+    const onchangeInputSearch = (e) => {
+        setSearchKeyword(e.target.value);
+    };
+
+    const onSubmitKeyWordSearch = (e) => {
+        e.preventDefault();
+        if (searchKeyword.trim() === '') {
+            // Nếu từ khóa tìm kiếm rỗng, reset lại danh sách đơn hàng
+            fetchAllOrders();
+        } else {
+            // Thực hiện tìm kiếm đơn hàng theo từ khóa "Người đặt"
+            const filteredOrders = orders.filter(order => order.name.toLowerCase().includes(searchKeyword.toLowerCase()));
+            setOrders(filteredOrders);
+        }
+    };
+
     return (
         <div className="wrapper-product">
             <div className="container-fluid">
@@ -174,7 +200,14 @@ function OrdersPage(props) {
                             <option value="3">Đã giao hàng</option>
                         </select>
                     </div>
-                    <div className="result-product">
+                    <form className="wrapper-search" onSubmit={onSubmitKeyWordSearch}>
+                        <input
+                            type="text"
+                            onChange={onchangeInputSearch}
+                            placeholder="Tìm kiếm theo người đặt...."
+                        />
+                    </form>
+                    {/* <div className="result-product">
                         <span>Result :</span>
                         <select className="custom-se" name="result">
                             <option value="5">5</option>
@@ -182,7 +215,7 @@ function OrdersPage(props) {
                             <option value="15">15</option>
                             <option value="20">20</option>
                         </select>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <div className="card-body m-0 pt-0">
