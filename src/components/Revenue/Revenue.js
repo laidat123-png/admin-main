@@ -36,9 +36,8 @@ const Revenue = () => {
   };
 
   const calculateTotals = (orders) => {
-    const deliveredOrders = orders.filter(order => order.status === 3); // Chỉ tính các đơn hàng có trạng thái "Đã giao hàng"
-    const totalRecords = deliveredOrders.length;
-    const totalRevenue = deliveredOrders.reduce((sum, order) => {
+    const totalRecords = orders.length;
+    const totalRevenue = orders.reduce((sum, order) => {
       const amount = typeof order.total === 'string' ? parseInt(order.total.replace('đ', '')) : order.total;
       return sum + (amount || 0);
     }, 0);
@@ -69,7 +68,7 @@ const Revenue = () => {
       if (filter.month && (orderDate.getMonth() + 1) !== parseInt(filter.month)) return false;
       if (filter.day && orderDate.getDate() !== parseInt(filter.day)) return false;
 
-      return order.status === 3; // Chỉ tính các đơn hàng có trạng thái "Đã giao hàng"
+      return true; // Tính tất cả các đơn hàng không phân biệt trạng thái
     });
 
     setFilteredData(filteredOrders);
@@ -78,8 +77,8 @@ const Revenue = () => {
 
   const handleReset = () => {
     setFilter({ day: '', month: '', year: '' });
-    setFilteredData(data.filter(order => order.status === 3)); // Chỉ tính các đơn hàng có trạng thái "Đã giao hàng"
-    calculateTotals(data.filter(order => order.status === 3));
+    setFilteredData(data); // Hiển thị toàn bộ đơn hàng
+    calculateTotals(data); // Tính toán lại tổng số đơn hàng và tổng doanh thu
   };
 
   const formatDate = (dateString) => {
