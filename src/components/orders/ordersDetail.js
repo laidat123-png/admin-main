@@ -6,8 +6,10 @@ function OrdersDetail(props) {
     const calculateTotalPrice = () => {
         return ordersDetail.productDetail.reduce((total, product) => {
             const price = product.productID?.price || 0;
+            const sale = product.productID?.sale || 0;
+            const discountedPrice = price - (price * (sale / 100)); // Tính giá đã giảm
             const quantity = product.quantity || 0;
-            return total + (price * quantity);
+            return total + (discountedPrice * quantity);
         }, 0);
     };
 
@@ -19,16 +21,22 @@ function OrdersDetail(props) {
                         <div className="col-auto">
                             <h6 className="color-1 mb-0 change-color">Chi tiết sản phẩm</h6>
                         </div>
-                        <div className="col-auto "> <small>Mã đơn hàng : {ordersDetail._id}</small> </div>
+                        <div className="col-auto"> <small>Mã đơn hàng : {ordersDetail._id}</small> </div>
                     </div>
                     <ul className="row p-0" style={{ display: 'block', overflow: 'auto', maxHeight: '210px' }}>
                         {ordersDetail.productDetail ? ordersDetail.productDetail.map(product => {
+                            const price = product.productID?.price || 0;
+                            const sale = product.productID?.sale || 0;
+                            const discountedPrice = price - (price * (sale / 100)); // Tính giá đã giảm
                             return (
                                 <li className="col" style={{ listStyle: 'none' }} key={product._id}>
                                     <div className="card card-2">
                                         <div className="card-body">
                                             <div className="media">
-                                                <div className="sq align-self-center "> <img className="img-fluid my-auto align-self-center mr-2 mr-md-4 pl-0 p-0 m-0" src={product.productID?.urls[0].url} width="50" height="50" alt={product.productID?.title} /> </div>
+                                                <div className="sq align-self-center ">
+                                                    <img className="img-fluid my-auto align-self-center mr-2 mr-md-4 pl-0 p-0 m-0" 
+                                                         src={product.productID?.urls[0].url} width="50" height="50" alt={product.productID?.title} />
+                                                </div>
                                                 <div className="media-body my-auto text-right">
                                                     <div className="row my-auto flex-column flex-md-row">
                                                         <div className="col my-auto">
@@ -36,7 +44,9 @@ function OrdersDetail(props) {
                                                         </div>
                                                         <div className="col my-auto"> <small>SL : {product?.quantity}</small></div>
                                                         <div className="col my-auto">
-                                                            <h6 className="mb-0">{product.productID?.price ? `${product.productID.price} đ` : 'N/A'}</h6>
+                                                            <h6 className="mb-0">
+                                                                {discountedPrice ? `${discountedPrice.toFixed(0)} đ` : 'N/A'}
+                                                            </h6>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -44,7 +54,7 @@ function OrdersDetail(props) {
                                         </div>
                                     </div>
                                 </li>
-                            )
+                            );
                         }) : ''}
                     </ul>
                     <div className="row mt-4">
@@ -58,7 +68,7 @@ function OrdersDetail(props) {
                                 </div>
                                 <div className="flex-sm-col col-auto">
                                     <p className="mb-1">
-                                        {calculateTotalPrice()} đ
+                                        {calculateTotalPrice().toFixed(0)} đ
                                     </p>
                                 </div>
                             </div>
@@ -96,9 +106,7 @@ function OrdersDetail(props) {
                             <p className="mb-1"> Ngày đặt : {new Date(ordersDetail.createdAt).toLocaleDateString()}</p>
                             <p className="mb-1">  Số điện thoại: {ordersDetail.phone}</p>
                             <p className="mb-1"> Trạng thái : {handleStatus(ordersDetail.status)}</p>
-                            <button
-                                onClick={() => handleToggleBtn(false)}
-                                className="mb-1 btn btn-primary">Đóng</button>
+                            <button onClick={() => handleToggleBtn(false)} className="mb-1 btn btn-primary">Đóng</button>
                         </div>
                     </div>
                 </div>
