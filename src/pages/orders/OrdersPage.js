@@ -37,14 +37,6 @@ function OrdersPage(props) {
 
     const handleDeleteOrder = (id) => {
         const orderToDelete = orders.find(order => order._id === id);
-        if (orderToDelete.status === 2) { // Kiểm tra nếu trạng thái là "Đang giao hàng"
-            toast.error("Không thể xóa đơn hàng khi đang ở trạng thái 'Đang giao hàng'", {
-                autoClose: 3000,
-                position: "top-right",
-                closeButton: true
-            });
-            return;
-        }
 
         axios({
             url: `${URL_API}/orders/${id}`,
@@ -139,22 +131,27 @@ function OrdersPage(props) {
 
     // Xuất dữ liệu chi tiết đơn hàng ra Excel
     const exportOrderDetailToExcel = (order) => {
-        const orderDetailData = order.productDetail.map((product, index) => ({
-            'Mã đơn hàng': index === 0 ? order._id : '',
-            'Người đặt': index === 0 ? order.name : '',
-            'Email người đặt': index === 0 ? order.email : '',
-            'Địa chỉ': index === 0 ? order.address : '',
-            'Số điện thoại': index === 0 ? order.phone : '',
-            'Ngày đặt': index === 0 ? new Date(order.createdAt).toLocaleDateString() : '',
-            'Trạng thái': index === 0 ? handleStatus(order.status) : '',
-            'Mã giảm giá': index === 0 ? order?.saleCode?.code || "Không" : '',
-            'Giảm giá': index === 0 ? `-${order?.saleCode?.discount || "0"} ${order?.saleCode?.type || ""}` : '',
-            'Tổng cộng': index === 0 ? order.total : '',
-            'Sản phẩm': product.productID?.title,
-            'Số lượng': product.quantity,
-            'Giá tiền': product.productID?.price
-        }));
-    
+        const orderDetailData = order.productDetail.map((product, index) => {
+            const price = product.productID?.price || 0;
+            const sale = product.productID?.sale || 0;
+            const discountedPrice = price - (price * (sale / 100)); // Tính giá đã giảm
+            return {
+                'Mã đơn hàng': index === 0 ? order._id : '',
+                'Người đặt': index === 0 ? order.name : '',
+                'Email người đặt': index === 0 ? order.email : '',
+                'Địa chỉ': index === 0 ? order.address : '',
+                'Số điện thoại': index === 0 ? order.phone : '',
+                'Ngày đặt': index === 0 ? new Date(order.createdAt).toLocaleDateString() : '',
+                'Trạng thái': index === 0 ? handleStatus(order.status) : '',
+                'Mã giảm giá': index === 0 ? order?.saleCode?.code || "Không" : '',
+                'Giảm giá': index === 0 ? `-${order?.saleCode?.discount || "0"} ${order?.saleCode?.type || ""}` : '',
+                'Tổng cộng': index === 0 ? order.total : '',
+                'Sản phẩm': product.productID?.title,
+                'Số lượng': product.quantity,
+                'Giá tiền': discountedPrice // Updated to use discounted price
+            };
+        });
+
         // Chuyển dữ liệu thành Excel và tải file xuống
         const ws = XLSX.utils.json_to_sheet(orderDetailData);
         const wb = XLSX.utils.book_new();
